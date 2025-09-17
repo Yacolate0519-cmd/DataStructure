@@ -1,1 +1,1 @@
-# DataStructure
+# lottery_system
