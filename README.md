@@ -1,6 +1,1 @@
-# lottery_system
-# lottery_system
-# lottery_system
-# lottery_system
-# lottery_system
-# DataStructure
+# 資療結構與演算法課程 實習練習
