@@ -16,49 +16,50 @@ class LinkedList():
 
     def append(self, value):
         current = self.head
-        while current.next != None:
+        while current.next:
             current = current.next
         current.next = Node(value)
 
     def insertAt(self, target_index, value):
         index = 0
         current = self.head
-        while current.next != None:
-            if index == target_index:
+        while current and current.next: 
+            if index == 0:
+                self.head = Node(value, self.head)
+                return   
+            if index + 1 == target_index:
                 current.next = Node(value, current.next)
-                index += 1
-            else:
-                index += 1
-                current = current.next
+                return 
+            current = current.next
+            index += 1
 
     def removeAt(self, target_index):
         index = 0
         current = self.head
-        while current.next != None:
-            index += 1
-            if target_index == index:
+        while current.next:
+            if index + 1 == target_index:
                 current.next = current.next.next
-            else:                
-                current = current.next
+            current = current.next
+            index += 1
                 
     def remove(self, target):
         current = self.head
-        while current.next != None:
+        while current.next:
             if current.next.value == target:
                 current.next = current.next.next
-            else:
-                current = current.next
-
+                return 
+            current = current.next
+            
     def indexOf(self, target):
         current = self.head
         index = 0
         while current:
             if current.value == target:
-                print(f'Target {target} is at {index}')
-                break
-            else:
-                index += 1
-                current = current.next
+                print(f'Target {target} is at index {index}')
+                return
+            current = current.next
+            index += 1
+        return -1
                 
     def isEmpty(self):
         current = self.head
@@ -88,7 +89,7 @@ if __name__ == '__main__':
 
     C_list = LinkedList(Node(1, Node(2, Node(3, Node(4)))))
     C_list.print()
-    C_list.insertAt(2, 13)
+    C_list.insertAt(0, 13)
     C_list.print()
 
     print("===== RemoveAt =====")
@@ -111,6 +112,7 @@ if __name__ == '__main__':
     print("===== IsEmpty =====")
 
     B_list = LinkedList()
+    
     A_list.isEmpty()
     B_list.isEmpty()
     
