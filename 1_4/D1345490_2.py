@@ -13,7 +13,7 @@ class TreeNode:
 class Solution:
     def sortedListToBST(self, head):
         if head is None:
-            return None
+            return Noneg
 
         # 如果 head 已經是 tail 就留下值然後滾蛋
         if head.next is None:
