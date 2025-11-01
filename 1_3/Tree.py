@@ -45,7 +45,7 @@ class Tree:
             self.postOrder(node.right)
             print(node.data, end = ' ')
     
-    # def isMirror(self, node):
+    def isMirror(self, node):
         if node.left is None and node.right is None:
             return Tree
         if node.left is None or node.right is None or node.left.data != node.right.data:
