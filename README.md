@@ -16,6 +16,7 @@
   - [1_4 排序演算法與遞迴](#1_4-排序演算法與遞迴)
   - [1_5 樹的進階應用](#1_5-樹的進階應用)
   - [1_6 鏈表與矩陣應用](#1_6-鏈表與矩陣應用)
+  - [1_7 AVL 平衡樹](#1_7-avl-平衡樹)
 - [環境需求](#環境需求)
 - [安裝與使用](#安裝與使用)
 - [資料結構實現](#資料結構實現)
@@ -28,8 +29,8 @@
 
 **專案目標**: 透過實作學習經典資料結構與演算法
 **開發語言**: Python 3.12
-**程式碼規模**: 22 個 Python 檔案，約 1100 行程式碼
-**課程單元**: 6 個主題單元
+**程式碼規模**: 24 個 Python 檔案，約 1240 行程式碼
+**課程單元**: 7 個主題單元
 **版本控制**: Git + GitHub
 
 ### 專案特色
@@ -430,6 +431,191 @@ class Solution:
 
 ---
 
+### 1_7 AVL 平衡樹
+
+**主題**: 自平衡二元搜尋樹 (AVL Tree)
+
+#### 檔案列表
+
+- `D1345490_1.py` - AVL Tree 完整實現 (插入 + 刪除)
+- `D1345490_2.py` - AVL Tree 改進版本
+- `Assignment.pdf` - 作業說明文件
+
+#### 核心實現 (`D1345490_1.py`)
+
+```python
+class AVLTree:
+    def height(self, root):
+        """獲取節點高度"""
+        if not root:
+            return 0
+        return root.height
+
+    def get_balance(self, root):
+        """計算平衡因子 (左子樹高度 - 右子樹高度)"""
+        if not root:
+            return 0
+        return self.height(root.left) - self.height(root.right)
+
+    def Right_rotation(self, root):
+        """右旋轉 (LL 情況)"""
+        x = root.left
+        temp = x.right
+        x.right = root
+        root.left = temp
+        # 更新高度
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
+        x.height = 1 + max(self.height(x.left), self.height(x.right))
+        return x
+
+    def Left_rotation(self, root):
+        """左旋轉 (RR 情況)"""
+        y = root.right
+        temp = y.left
+        y.left = root
+        root.right = temp
+        # 更新高度
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
+        y.height = 1 + max(self.height(y.left), self.height(y.right))
+        return y
+
+    def insert(self, root, value):
+        """
+        插入節點並自動平衡
+        時間複雜度: O(log n)
+        """
+        # 1. 執行標準 BST 插入
+        if not root:
+            return Node(value)
+
+        if value < root.value:
+            root.left = self.insert(root.left, value)
+        elif value > root.value:
+            root.right = self.insert(root.right, value)
+        else:
+            return root  # 重複值不插入
+
+        # 2. 更新節點高度
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
+
+        # 3. 計算平衡因子
+        balance = self.get_balance(root)
+
+        # 4. 進行平衡調整 (4 種情況)
+        # LL: 左子樹的左側插入
+        if balance > 1 and value < root.left.value:
+            return self.Right_rotation(root)
+
+        # LR: 左子樹的右側插入
+        if balance > 1 and value > root.left.value:
+            root.left = self.Left_rotation(root.left)
+            return self.Right_rotation(root)
+
+        # RR: 右子樹的右側插入
+        if balance < -1 and value > root.right.value:
+            return self.Left_rotation(root)
+
+        # RL: 右子樹的左側插入
+        if balance < -1 and value < root.right.value:
+            root.right = self.Right_rotation(root.right)
+            return self.Left_rotation(root)
+
+        return root
+
+    def delete(self, root, value):
+        """
+        刪除節點並自動平衡
+        時間複雜度: O(log n)
+        """
+        # 1. 執行標準 BST 刪除
+        if root is None:
+            return root
+
+        if value < root.value:
+            root.left = self.delete(root.left, value)
+        elif value > root.value:
+            root.right = self.delete(root.right, value)
+        else:
+            # 找到要刪除的節點
+            if root.left is None and root.right is None:
+                return None
+            elif root.left is None:
+                return root.right
+            elif root.right is None:
+                return root.left
+            else:
+                # 有兩個子節點: 找右子樹的最小值
+                temp = root.right
+                while temp.left:
+                    temp = temp.left
+                root.value = temp.value
+                root.right = self.delete(root.right, temp.value)
+
+        # 2. 更新高度
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
+
+        # 3. 計算平衡因子並調整
+        balance = self.get_balance(root)
+
+        # LL
+        if balance > 1 and self.get_balance(root.left) >= 0:
+            return self.Right_rotation(root)
+        # LR
+        if balance > 1 and self.get_balance(root.left) < 0:
+            root.left = self.Left_rotation(root.left)
+            return self.Right_rotation(root)
+        # RR
+        if balance < -1 and self.get_balance(root.right) <= 0:
+            return self.Left_rotation(root)
+        # RL
+        if balance < -1 and self.get_balance(root.right) > 0:
+            root.right = self.Right_rotation(root.right)
+            return self.Left_rotation(root)
+
+        return root
+```
+
+**測試案例 (D1345490_1.py)**:
+```python
+# 插入: [10, 20, 30, 40, 50, 25]
+# 前序遍歷: 30 -> 20 -> 10 -> 25 -> 40 -> 50
+
+# 刪除 20 後
+# 前序遍歷: 30 -> 25 -> 10 -> 40 -> 50
+```
+
+**測試案例 (D1345490_2.py)**:
+```python
+# 插入: [10, 11, 12, ..., 30] (連續數字)
+# 刪除 15, 14
+# 展示大量節點的平衡維護
+```
+
+**AVL Tree 四種旋轉情況**:
+
+| 情況 | 插入位置 | 調整方式 | 說明 |
+|------|---------|---------|------|
+| LL | 左子樹的左側 | 右旋轉 | balance > 1, left.balance >= 0 |
+| LR | 左子樹的右側 | 左旋轉 + 右旋轉 | balance > 1, left.balance < 0 |
+| RR | 右子樹的右側 | 左旋轉 | balance < -1, right.balance <= 0 |
+| RL | 右子樹的左側 | 右旋轉 + 左旋轉 | balance < -1, right.balance > 0 |
+
+**AVL Tree 特性**:
+- **平衡因子**: 左子樹高度 - 右子樹高度 ∈ {-1, 0, 1}
+- **高度保證**: 對於 n 個節點，樹高度 ≈ 1.44 log n
+- **插入/刪除**: O(log n) 時間複雜度
+- **查詢效率**: 保證 O(log n) (相比未平衡 BST 最差 O(n))
+- **自動平衡**: 每次插入/刪除後自動調整
+
+**關鍵概念**:
+- 平衡因子計算與維護
+- 四種旋轉操作 (LL, LR, RR, RL)
+- 插入後的自動平衡
+- 刪除後的自動平衡
+- 高度更新策略
+
+---
+
 ## 💻 環境需求
 
 - **Python**: 3.12 或以上
@@ -487,6 +673,10 @@ cd 1_5 && python Test2.py
 # 單元 6: 鏈表與矩陣應用
 cd 1_6 && python D1345490_1.py
 cd 1_6 && python D1345490_2.py
+
+# 單元 7: AVL 平衡樹
+cd 1_7 && python D1345490_1.py
+cd 1_7 && python D1345490_2.py
 ```
 
 ## 📊 資料結構實現
@@ -510,6 +700,7 @@ cd 1_6 && python D1345490_2.py
 | 二元搜尋樹 (BST) | `1_3/Tree.py` | 插入、三種遍歷方式 |
 | 平衡 BST | `1_4/D1345490_2.py` | 從排序鏈表構建 |
 | 對稱樹檢驗 | `1_5/Test2.py` | 遞迴比較左右子樹 |
+| AVL 樹 | `1_7/D1345490_1.py` | 自平衡 BST，四種旋轉操作 |
 
 ## 🔧 演算法實現
 
@@ -528,6 +719,11 @@ cd 1_6 && python D1345490_2.py
 - **Tower of Hanoi** (`1_4/main.py`) - 經典遞迴問題
 - **樹的遍歷** (`1_3/Tree.py`) - 前序、中序、後序
 - **鏈表轉樹** (`1_4/D1345490_2.py`) - 快慢指針 + 遞迴
+
+### 平衡樹演算法
+
+- **AVL 旋轉** (`1_7/D1345490_1.py`) - 四種旋轉操作 (LL, LR, RR, RL)
+- **自動平衡** (`1_7/D1345490_1.py`) - 插入/刪除後平衡維護
 
 ### 其他技巧
 
@@ -562,17 +758,22 @@ cd 1_6 && python D1345490_2.py
 6. 1_6 鏈表與矩陣應用
    ├─ 兩數相加 (進位處理)
    └─ 螺旋矩陣 (遞迴遍歷)
+   ↓
+7. 1_7 AVL 平衡樹
+   ├─ 平衡因子與樹高度
+   ├─ 四種旋轉操作
+   └─ 自動平衡維護 (綜合應用)
 ```
 
 ### 核心概念進階
 
 ```
-基礎 → 技巧 → 結構 → 演算法 → 應用
- ↓      ↓      ↓       ↓       ↓
-搜尋   雙指針  鏈表    排序    樹的
-             堆疊    遞迴    對稱性
-             佇列
-             樹
+基礎 → 技巧 → 結構 → 演算法 → 應用 → 進階樹結構
+ ↓      ↓      ↓       ↓       ↓       ↓
+搜尋   雙指針  鏈表    排序    樹的    AVL樹
+             堆疊    遞迴    對稱性  自平衡
+             佇列            鏈表+   樹旋轉
+             樹             矩陣
 ```
 
 ## 📚 教學資源
@@ -582,6 +783,7 @@ cd 1_6 && python D1345490_2.py
 - `1_3/Stack and Queue.pdf` - Stack 與 Queue 教學
 - `1_4/Recursion.pdf` - 遞迴概念教學
 - `1_5/題目.pdf` - 第 5 單元習題說明
+- `1_7/Assignment.pdf` - AVL Tree 作業說明
 
 ## 🎓 程式碼特色
 
@@ -618,12 +820,12 @@ if __name__ == '__main__':
 
 ## 📝 專案統計
 
-- **總程式碼行數**: ~1100 行
-- **Python 檔案**: 22 個
-- **平均每檔**: 50 行
-- **課程單元**: 6 個
-- **實現的資料結構**: 8 種
-- **實現的演算法**: 12+ 種
+- **總程式碼行數**: ~1240 行
+- **Python 檔案**: 24 個
+- **平均每檔**: 52 行
+- **課程單元**: 7 個
+- **實現的資料結構**: 9 種
+- **實現的演算法**: 14+ 種
 
 ## 🤝 貢獻指南
 
@@ -670,7 +872,7 @@ if __name__ == '__main__':
 
 ---
 
-**最後更新**: 2025-11-23
+**最後更新**: 2025-11-28
 **專案狀態**: 持續更新中 🚧
 
 **Happy Coding! 🎉**
