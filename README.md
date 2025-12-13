@@ -18,6 +18,7 @@
   - [1_6 鏈表與矩陣應用](#1_6-鏈表與矩陣應用)
   - [1_7 AVL 平衡樹](#1_7-avl-平衡樹)
   - [1_8 紅黑樹](#1_8-紅黑樹)
+  - [1_9 Trie 與雜湊表](#1_9-trie-與雜湊表)
 - [環境需求](#環境需求)
 - [安裝與使用](#安裝與使用)
 - [資料結構實現](#資料結構實現)
@@ -886,6 +887,73 @@ class RedBlackTree:
 - 插入後的修復策略（三種情況）
 - 哨兵節點 (TNULL) 的使用
 - 紅黑樹與 AVL 樹的比較
+
+---
+
+### 1_9 Trie 與雜湊表
+
+**主題**: Trie 前綴樹與雜湊表應用
+
+#### 檔案列表
+
+- `D1345490_1.py` - Trie 前綴樹實現
+- `D1345490_2.py` - 雜湊表演算法 (Two Sum)
+- `Trie and Hash.pdf` - 教學文件
+
+#### D1345490_1.py - Trie 前綴樹
+
+完整的 Trie 樹實現，用於高效的字串前綴搜索。
+
+```python
+class Trie:
+    def add_Word(self, word)    # 添加單詞
+    def search_Word(self, word) # 搜尋單詞
+    def query(self, prefix, k)  # 查詢前綴並返回頻率最高的 k 個結果
+    def remove_Word(self, word) # 刪除單詞
+```
+
+**關鍵功能**:
+- `add_Word`: 支持重複添加單詞，並記錄頻率。
+- `query`: 根據前綴查找單詞，並按照 **頻率** 和 **字典序** 進行排序。
+- `remove_Word`: 刪除單詞（如果單詞頻率大於 1，則只減少頻率）。
+
+**測試案例**:
+```python
+# 插入: "Apple", "Apple", "App", "Application"
+# 查詢 "App" (k=5): [('App', 1), ('Apple', 2), ('Application', 1)]
+# 移除 "Apple" 一次後
+# 查詢 "App" (k=5): [('App', 1), ('Apple', 1), ('Application', 1)]
+```
+
+#### D1345490_2.py - Two Sum
+
+使用雜湊表（字典）解決 LeetCode 經典問題 "Two Sum"。
+
+```python
+def two_sum(nums, target):
+    """
+    在整數陣列中查找兩個數，使其和為目標值
+    時間複雜度: O(n)
+    空間複雜度: O(n)
+    """
+    seen = {} # 雜湊表，用於存儲看過的數字及其索引
+    for i, num in enumerate(nums):
+        remain = target - num
+        if remain in seen:
+            return (seen[remain], i)
+        seen[num] = i
+```
+
+**測試案例**:
+```python
+# 輸入: nums = [2, 7, 11, 15], target = 9
+# 輸出: (0, 1)  (因為 nums[0] + nums[1] == 9)
+```
+
+**關鍵概念**:
+- **Trie (前綴樹)**: 高效的字串儲存與前綴查詢結構。
+- **雜湊表 (Hash Table)**: O(1) 時間複雜度的查找、插入和刪除。
+- **Two Sum 問題**: 雜湊表的經典應用場景。
 
 ---
 
