@@ -19,8 +19,9 @@
   - [1_7 AVL 平衡樹](#1_7-avl-平衡樹)
   - [1_8 紅黑樹](#1_8-紅黑樹)
   - [1_9 Trie 與雜湊表](#1_9-trie-與雜湊表)
-  - [1_10 堆積與優先佇列](#1_10-堆積與優先佇列)
-  - [1_11 圖形演算法](#1_11-圖形演算法)
+  - [1_10 排序演算法複習](#1_10-排序演算法複習)
+  - [1_11 貪婪演算法](#1_11-貪婪演算法)
+  - [1_12 DFS 與 BFS 演算法](#1_12-dfs-與-bfs-演算法)
 - [環境需求](#環境需求)
 - [安裝與使用](#安裝與使用)
 - [資料結構實現](#資料結構實現)
@@ -959,95 +960,127 @@ def two_sum(nums, target):
 
 ---
 
-### 1_10 堆積與優先佇列
+### 1_10 排序演算法複習
 
-**主題**: 堆積 (Heap) 與優先佇列 (Priority Queue)
+**主題**: 歸併排序與快速排序 (Merge Sort & Quick Sort)
 
 #### 檔案列表
 
-- `D1345490_1.py` - 堆積排序 (Heap Sort)
-- `D1345490_2.py` - 優先佇列實現
+- `D1345490_1.py` - 歸併排序 (Merge Sort)
+- `D1345490_2.py` - 快速排序 (Quick Sort)
 - `Assignment.pdf` - 作業說明文件
 
-#### D1345490_1.py - 堆積排序
+#### D1345490_1.py - 歸併排序
 
-實現堆積排序演算法，利用堆積的特性進行高效排序：
+實現穩定的歸併排序演算法：
 
 ```python
-class HeapSort:
-    def heapify(self, arr, n, i):
-        # 堆積化操作
-    def heap_sort(self, arr):
-        # 堆積排序主函數
+def merge_sort(nums):
+    # Divide and Conquer 策略
+    # 時間複雜度: O(n log n)
+    # 空間複雜度: O(n)
+```
+
+#### D1345490_2.py - 快速排序
+
+實現經典的快速排序演算法：
+
+```python
+def quick_sort(nums):
+    # 選擇 Pivot 進行分區
+    # 平均時間複雜度: O(n log n)
+    # 最差時間複雜度: O(n²)
 ```
 
 **關鍵概念**:
-- 堆積 (Heap) 的基本結構 (最大堆積/最小堆積)
-- 堆積化 (Heapify) 操作
-- 堆積排序演算法的實現
-- 時間複雜度分析: O(n log n)
-
-#### D1345490_2.py - 優先佇列
-
-使用堆積實現優先佇列：
-
-```python
-class PriorityQueue:
-    def insert(self, item, priority):
-        # 插入元素並根據優先級排序
-    def extract_min(self):
-        # 提取優先級最高的元素 (最小值)
-    def is_empty(self):
-        # 檢查佇列是否為空
-```
-
-**關鍵概念**:
-- 優先佇列的抽象資料型別
-- 堆積在優先佇列中的應用
-- 插入和提取操作的實現
+- Divide and Conquer (分治法)
+- 遞迴實現排序
+- 穩定排序 vs 不穩定排序
 
 ---
 
-### 1_11 圖形演算法
+### 1_11 貪婪演算法
 
-**主題**: 圖形演算法 (Graph Algorithms) - 探索圖形結構與路徑尋找
+**主題**: 貪婪演算法 (Greedy Algorithms)
 
 #### 檔案列表
 
-- `Count_min_length.py` - 最短路徑計數或類似問題
-- `Greep_Heap.py` - 可能結合貪婪演算法與堆積 (如 Dijkstra)
+- `Count_min_length.py` - 最小成本連接問題
+- `Greep_Heap.py` - 跳躍遊戲 (Jump Game)
 - `Assignment.pdf` - 作業說明文件
 
-#### Count_min_length.py - 最短路徑計數
+#### Count_min_length.py - 最小成本連接
 
-計算圖中特定條件下的最短路徑或最小長度：
+類似 Huffman Coding 的概念，每次選擇最小的兩個元素合併：
 
 ```python
-def count_min_path(graph, start, end):
-    # 可能使用 BFS 或 Dijkstra 演算法
-    # 計算最短路徑的數量或長度
+def count_min_length(data):
+    # 每次取最小的兩個數相加
+    # 累積成本即為總成本
+    # 類似 Huffman Tree 建構過程
+```
+
+#### Greep_Heap.py - 跳躍遊戲 II
+
+計算到達終點的最少跳躍次數：
+
+```python
+def jump_times(data):
+    # 使用貪婪策略
+    # 每次選擇能跳最遠的範圍
+    # 時間複雜度: O(n)
 ```
 
 **關鍵概念**:
-- 圖的表示 (鄰接矩陣/鄰接表)
-- 廣度優先搜尋 (BFS) 或 Dijkstra 演算法
-- 最短路徑問題的變種
+- 貪婪策略 (局部最優解 -> 全局最優解)
+- 堆積 (Heap) 在貪婪算法中的應用 (用於快速取最小值)
+- 區間覆蓋問題
 
-#### Greep_Heap.py - 貪婪演算法與堆積應用
+---
 
-可能實現 Dijkstra 演算法或其他結合貪婪策略與堆積的圖形演算法：
+---
+
+### 1_12 DFS 與 BFS 演算法
+
+**主題**: 深度優先搜尋 (DFS) 與廣度優先搜尋 (BFS)
+
+#### 檔案列表
+
+- `D1345490_1.py` - 迷宮路徑搜尋 (Maze Path Finding)
+- `D1345490_2.py` - 島嶼數量 (Number of Islands)
+- `Assignment.pdf` - 作業說明文件
+
+#### D1345490_1.py - 迷宮路徑搜尋
+
+比較 DFS 與 BFS 在迷宮搜尋中的差異：
 
 ```python
-def greedy_heap_algorithm(graph, start_node):
-    # 可能實現 Dijkstra 或 Prim 演算法
-    # 利用優先佇列優化
+def DFS(data, x, y):
+    # 深度優先搜尋
+    # 尋找是否存在路徑 (可行性)
+    
+def BFS(data, start, end):
+    # 廣度優先搜尋
+    # 尋找最短路徑
+    # 記錄路徑來源 (parent)
+```
+
+#### D1345490_2.py - 島嶼數量
+
+LeetCode 200 經典題，計算網格中相連的陸地數量：
+
+```python
+def number_of_island_DFS(data):
+    # 使用 DFS 遍歷並標記已訪問陸地
+    
+def number_of_island_BFS(data):
+    # 使用 BFS 遍歷並標記已訪問陸地
 ```
 
 **關鍵概念**:
-- 貪婪演算法 (Greedy Algorithm) 的原則
-- Dijkstra 最短路徑演算法
-- Prim 或 Kruskal 最小生成樹演算法
-- 堆積 (優先佇列) 在圖形演算法中的應用
+- DFS vs BFS 的特性與應用場景
+- Stack (遞迴) vs Queue (佇列) 的使用
+- 圖形遍歷與連通分量 (Connected Components)
 
 ---
 
@@ -1116,6 +1149,22 @@ cd 1_7 && python D1345490_2.py
 # 單元 8: 紅黑樹
 cd 1_8 && python D1345490_1.py
 cd 1_8 && python D1345490_2.py
+
+# 單元 9: Trie 與雜湊表
+cd 1_9 && python D1345490_1.py
+cd 1_9 && python D1345490_2.py
+
+# 單元 10: 排序演算法複習
+cd 1_10 && python D1345490_1.py
+cd 1_10 && python D1345490_2.py
+
+# 單元 11: 貪婪演算法
+cd 1_11 && python Count_min_length.py
+cd 1_11 && python Greep_Heap.py
+
+# 單元 12: DFS 與 BFS
+cd 1_12 && python D1345490_1.py
+cd 1_12 && python D1345490_2.py
 ```
 
 ## 📊 資料結構實現
@@ -1217,13 +1266,17 @@ cd 1_8 && python D1345490_2.py
    ├─ Trie 前綴樹
    └─ 雜湊表應用 (Two Sum)
    ↓
-10. 1_10 堆積與優先佇列
-    ├─ 堆積排序
-    └─ 優先佇列實現
+10. 1_10 排序演算法複習
+    ├─ 歸併排序 (Merge Sort)
+    └─ 快速排序 (Quick Sort)
     ↓
-11. 1_11 圖形演算法
-    ├─ 最短路徑計數
-    └─ 貪婪演算法與堆積應用
+11. 1_11 貪婪演算法
+    ├─ 最小成本連接 (Huffman-like)
+    └─ 跳躍遊戲 (Jump Game)
+    ↓
+12. 1_12 DFS 與 BFS 演算法
+    ├─ 迷宮路徑搜尋
+    └─ 島嶼數量 (連通分量)
 ```
 
 ### 核心概念進階
@@ -1282,12 +1335,12 @@ if __name__ == '__main__':
 
 ## 📝 專案統計
 
-- **總程式碼行數**: ~1440 行
-- **Python 檔案**: 27 個
-- **平均每檔**: 53 行
-- **課程單元**: 8 個
-- **實現的資料結構**: 10 種
-- **實現的演算法**: 17+ 種
+- **總程式碼行數**: ~1800 行
+- **Python 檔案**: 35 個
+- **平均每檔**: 50 行
+- **課程單元**: 12 個
+- **實現的資料結構**: 12+ 種
+- **實現的演算法**: 25+ 種
 
 ## 🤝 貢獻指南
 
